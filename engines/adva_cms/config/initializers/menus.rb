@@ -1,8 +1,29 @@
 module Menus
+  # all sections will be populated with no respect for nested sections
   class Sections < Menu::Menu
     define do
       id :sections
       @site.sections.select { |s| s.published?(true) }.each { |section| item section.title, :action => :show, :resource => section }
+    end
+  end
+
+  # only first level sections will be populated from a list of nested sections
+  class TopLevelSections < Menu::Menu
+    define do
+      id :sections
+      @site.sections.select { |s| s.published?(true) && s.parent.blank? }.each { |section| item section.title, :action => :show, :resource => section }
+    end
+  end
+  
+  # all nested sections will populate in ul, li, a tags
+  class NestedSections < Menu::Group
+    define do
+      id :sections
+      menu :navigation, :class => 'menu' do
+        @site.sections.select {|s| s.published?(true) && s.parent.blank?}.each do |section|
+          item section.title, :action => :show, :resource => section, :type => Menu::SectionsUserMenu, :populate => lambda { section.children }
+        end
+      end
     end
   end
 

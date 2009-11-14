@@ -170,4 +170,13 @@ module Menu
       end
     end
   end
+
+  # populates public URLs nested
+  class SectionsUserMenu < SectionsMenu
+    def populate(scope, options = {:admin => true})
+      scope.instance_eval(&@options[:populate]).each do |s|
+	      @sections << Base.new(s.title, :level => s.level, :url => scope.section_path(s)) unless s.new_record?
+      end
+    end
+  end  
 end

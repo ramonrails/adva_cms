@@ -88,4 +88,22 @@ module ContentHelper
     id = "#{type}_category_#{category.id}"
     check_box_tag(name, category.id, checked, :id => id)
   end
+
+  # flat menu. Not very useful for site with many nested sections.
+  #  all sections from any level are presented flat in a single row
+  def flat_menu
+    Menus::Sections.new.build(self).root.render(:id => 'sections')
+  end
+  
+  # top level sections only. children of root. no grand children or further
+  # save menu space. reduce crowd of sections that are child of other sections
+  def top_level_menu
+    Menus::TopLevelSections.new.build(self).root.render(:id => 'sections')
+  end
+  
+  # sections are presented in nested tags ul > li > a ul...
+  #  this can work with any javascript that expects nested menu arranged in ul, li, a tags
+  def nested_menu
+    Menus::NestedSections.new.build(self).root.render
+  end
 end
