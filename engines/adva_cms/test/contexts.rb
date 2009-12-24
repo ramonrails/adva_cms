@@ -119,7 +119,7 @@ class Test::Unit::TestCase
 
   share :a_site do
     before do
-      @site = Site.find_by_host 'site-with-pages.com'
+      @site = Site.find_by_host! 'site-with-pages.com'
       set_request_host!
     end
   end

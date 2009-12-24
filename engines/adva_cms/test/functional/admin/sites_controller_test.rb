@@ -39,7 +39,7 @@ class AdminSitesControllerTest < ActionController::TestCase
       with :is_superuser do
         with :access_granted do
             before do
-              mock(Site).find_by_host("site-with-pages.com") { nil }
+              mock(Site).find_by_host!("site-with-pages.com") { nil }
               @site_mock = Site.new
               mock(@site_mock).id.times(any_times) { 1 }
               mock(Site).first { @site_mock }
@@ -63,7 +63,7 @@ class AdminSitesControllerTest < ActionController::TestCase
 
             action { get :index }
 
-            it_redirects_to { admin_site_url(Site.find_by_host("site-with-pages.com")) }
+            it_redirects_to { admin_site_url(Site.find_by_host!("site-with-pages.com")) }
         end
       end
     end

@@ -36,9 +36,13 @@ class Site < ActiveRecord::Base
   cattr_accessor :multi_sites_enabled, :cache_sweeper_logging
 
   class << self
+    def find_by_alias_contains(host) #ramonrails
+      find(:first, :conditions => ["sites.alias LIKE ?", "%#{host}%"])
+    end
+    
     def find_by_host!(host)
       return Site.first if count == 1 && !multi_sites_enabled
-      find_by_host(host) # || raise(ActiveRecord::RecordNotFound, "Could not find site for hostname #{host}.")
+      find_by_host(host) || find_by_alias_contains(host) # || raise(ActiveRecord::RecordNotFound, "Could not find site for hostname #{host}.") # ramonrails
     end
 
     # FIXME clemens thinks this doesn't belong here. he's probably right.
